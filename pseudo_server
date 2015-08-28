@@ -1,0 +1,33 @@
+##### server side #####
+get user post data : userID_2 and rivalID_2
+Insert to database
+start to find a rivalID_2 == userID1
+if found then 
+	prepareToStartGame()
+else let user waiting for 20sec
+
+prepareToStartGame(){
+	set the `match_condition`=true where username=`userID_1`
+	set the `match_condition`=true where username=`userID_2`(optional)
+	return success
+}
+
+
+##### client side #####
+check network connection available
+post rival id to server
+while(!`isMatch`){
+	keep checking the `match_condition` is ture of false for 20sec
+}
+if(!timeout){
+	startGame()
+}
+else{
+	can not find rival
+}
+
+
+
+
+
+
