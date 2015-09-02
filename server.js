@@ -84,6 +84,8 @@ function deleteMongodb(document){
 
 
 // handle post request
+// if the ID is legal, then insert the user to database
+// check if the opponent is already in database
 app.post('/', function(req, res){
 	//console.log(req.body.UserID);
 	//console.log(req.body.RivalID);
@@ -96,7 +98,6 @@ app.post('/', function(req, res){
 		addUser(userID, rivalID);
 	}
 
-	//checkMatch(userID, rivalID);
 	startCheckMatch(userID, rivalID);
 
 	res.send('You have posted the form');
