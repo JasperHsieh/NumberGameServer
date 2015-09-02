@@ -1,0 +1,5 @@
+***** start mongodb service *****
+sudo mongod --dbpath=/data --port 27017
+
+***** start mongodb shell script *****
+./bin/mongo
