@@ -1,5 +1,19 @@
 ***** start mongodb service *****
+sudo mongod or
 sudo mongod --dbpath=/data --port 27017
 
 ***** start mongodb shell script *****
 ./bin/mongo
+
+
+***** mongodb *****
+
+* insert
+>db.COLLECTION_NAME.insert(document)
+db.Users.insert({user_ID:"1", rival_ID:"99999999", Match:0})
+
+
+* query
+>db.COLLECTION_NAME.find()
+
+

@@ -142,12 +142,23 @@ function checkMatch(cursor){
 	else if(cursor.length == 1){
 		// ID fetched, game start
 		console.log("Opponent found");
-
+		handleFetched();
 	}
 	else{
 		// found more than one opponent, should not happen
 		console.log("Something wrong");
 	}
+}
 
+// create collection for users and set match flag
+function handleFetched(){
 
+	console.log("handleFetched");
+	var collection_name = "table_" + userID + "_" + rivalID;
+	var new_coll = db.collection(collection_name);
+	new_coll.insert({Username:'test', guess:'0A0B'}, function(err, result){
+		assert.equal(null, err);
+	});
+	Users_coll.update({user_ID:userID}, {$set:{Match:1}});
+	Users_coll.update({user_ID:rivalID}, {$set:{Match:1}});
 }
