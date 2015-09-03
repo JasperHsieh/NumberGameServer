@@ -104,13 +104,21 @@ app.post('/', function(req, res){
 
 	//startCheckMatch(userID, rivalID);
 
-	res.send('You have posted the form');
+	res.send('You have posted the form\n');
 });
 
 app.post('/checkFetched', function(req, res){
 
 	pollingID = req.body.PollingID;
 	console.log("handle polling request:" + pollingID);
+	var doc = {user_ID:pollingID};
+	Users_coll.find(doc).toArray(function(err, docs){
+		assert.equal(null, err);
+		console.log("polling result:" + docs[0].rival_ID);
+		var obj = {matchResult:docs[0].Match, tableName:docs[0].Table_Name};
+		var jstr = JSON.stringify(obj);
+		res.send(jstr);
+	});
 });
 
 function isIdLegal(ID){
@@ -170,7 +178,7 @@ function handleFetched(){
 		assert.equal(null, err);
 	});
 	var sel = {user_ID:userID}
-	var doc = {$set:{Match:1}};
+	var doc = {$set:{Match:1, Table_Name:collection_name}};
 
 	updateMongodb(Users_coll, sel, doc);
 
