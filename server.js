@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({
 
 var userID = "00000000";
 var rivalID = "00000000";
+var pollingID = "00000000";
 
 app.use(bodyParser.json());
 
@@ -47,19 +48,24 @@ function dump(cursor){
 }
 
 // insert mongo db
-function insertMongodb(document){
+function insertMongodb(document, callback){
 
 	console.log("insertMongodb:");
 	Users_coll.insert(document, function(err, result){
 		assert.equal(null, err);
-		//console.log("result:" + result);
+		console.log("insert successfuly:" + result[0]);
+		callback(document.user_ID, document.rival_ID);
 	});
 }
 
 // update mongo db
-function updateMongodb(document){
+function updateMongodb(collection, selector, document){
 
-	console.log("updateMongodb:" + document);
+	console.log("updateMongodb:");
+	collection.update(selector, document, function(err, numberUpdated){
+		assert.equal(null, err);
+		console.log("update:" + selector.user_ID + " successfully");
+	});
 }
 
 // query mongo db
@@ -82,32 +88,36 @@ function deleteMongodb(document){
 	console.log("deleteMongodb:" + document);
 }
 
-
 // handle post request
 // if the ID is legal, then insert the user to database
 // check if the opponent is already in database
 app.post('/', function(req, res){
-	//console.log(req.body.UserID);
-	//console.log(req.body.RivalID);
+
 	userID = req.body.UserID;
 	rivalID = req.body.RivalID;
 	console.log("handle post request:" + userID + " " + rivalID);
 
-	if(isIdLegal(userID, rivalID)){
+	if(isIdLegal(userID) && isIdLegal(rivalID)){
 
-		addUser(userID, rivalID);
+		addUser(userID, rivalID, startCheckMatch);
 	}
 
-	startCheckMatch(userID, rivalID);
+	//startCheckMatch(userID, rivalID);
 
 	res.send('You have posted the form');
 });
 
-function isIdLegal(mID, rID){
+app.post('/checkFetched', function(req, res){
 
-	console.log("isIdLegal()" + " mID:" + mID + " rID:" + rID);
+	pollingID = req.body.PollingID;
+	console.log("handle polling request:" + pollingID);
+});
 
-	if((!isNaN(mID)) && (!isNaN(rID))){
+function isIdLegal(ID){
+
+	console.log("isIdLegal():" + ID);
+
+	if(!isNaN(ID)){
 		return true;
 	}
 	else{
@@ -116,11 +126,11 @@ function isIdLegal(mID, rID){
 
 }
 
-function addUser(mID, rID){
+function addUser(mID, rID, callback){
 
 	console.log("addUser()");
 	var doc = {user_ID:mID, rival_ID:rID, Match:0};
-	insertMongodb(doc);
+	insertMongodb(doc, callback);
 
 }
 
@@ -159,6 +169,11 @@ function handleFetched(){
 	new_coll.insert({Username:'test', guess:'0A0B'}, function(err, result){
 		assert.equal(null, err);
 	});
-	Users_coll.update({user_ID:userID}, {$set:{Match:1}});
-	Users_coll.update({user_ID:rivalID}, {$set:{Match:1}});
+	var sel = {user_ID:userID}
+	var doc = {$set:{Match:1}};
+
+	updateMongodb(Users_coll, sel, doc);
+
+	sel = {user_ID:rivalID};
+	updateMongodb(Users_coll, sel, doc);
 }

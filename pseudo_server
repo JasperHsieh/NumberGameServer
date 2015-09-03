@@ -12,6 +12,11 @@ prepareToStartGame(){
 	return success
 }
 
+***** pairing function  *****
+addUser -> insertMongodb -> startCheckMatch -> queryMondb
+-> checkMatch -> handleFetched -> updateMongodb
+
+
 
 ##### client side #####
 check network connection available

@@ -16,4 +16,5 @@ db.Users.insert({user_ID:"1", rival_ID:"99999999", Match:0})
 * query
 >db.COLLECTION_NAME.find()
 
-
+* drop collection
+db.COLLECTION_NAME.drop()
