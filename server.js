@@ -11,7 +11,6 @@ app.use(bodyParser.urlencoded({
 
 var userID = "00000000";
 var rivalID = "00000000";
-var pollingID = "00000000";
 
 app.use(bodyParser.json());
 
@@ -109,16 +108,24 @@ app.post('/', function(req, res){
 
 app.post('/checkFetched', function(req, res){
 
-	pollingID = req.body.PollingID;
-	console.log("handle polling request:" + pollingID);
+	var pollingID = req.body.PollingID;
+	console.log("handle polling request from:" + pollingID);
 	var doc = {user_ID:pollingID};
 	Users_coll.find(doc).toArray(function(err, docs){
 		assert.equal(null, err);
-		console.log("polling result:" + docs[0].rival_ID);
+		console.log("polling result:" + docs[0].Match);
 		var obj = {matchResult:docs[0].Match, tableName:docs[0].Table_Name};
 		var jstr = JSON.stringify(obj);
 		res.send(jstr);
 	});
+});
+
+app.post('/checkTable', function(req, res){
+
+	var currentID = req.body.CurrentID;
+	var currentTable = req.body.CurrentTable;
+	console.log("handle table checking from:" + currentID);
+
 });
 
 function isIdLegal(ID){
@@ -174,7 +181,7 @@ function handleFetched(){
 	console.log("handleFetched");
 	var collection_name = "table_" + userID + "_" + rivalID;
 	var new_coll = db.collection(collection_name);
-	new_coll.insert({Username:'test', guess:'0A0B'}, function(err, result){
+	new_coll.insert({User_name:'test', guess:'1234', guess_result:'0A0B'}, function(err, result){
 		assert.equal(null, err);
 	});
 	var sel = {user_ID:userID}

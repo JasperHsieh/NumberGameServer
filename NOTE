@@ -19,7 +19,5 @@ db.Users.insert({user_ID:"1", rival_ID:"99999999", Match:0})
 * drop collection
 db.COLLECTION_NAME.drop()
 
-
-
 ***** http request through terminal *****
 curl --data "PollingID=1" http://118.166.88.157:3000/checkFetched
