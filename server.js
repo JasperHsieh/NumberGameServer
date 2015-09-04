@@ -113,10 +113,16 @@ app.post('/checkFetched', function(req, res){
 	var doc = {user_ID:pollingID};
 	Users_coll.find(doc).toArray(function(err, docs){
 		assert.equal(null, err);
-		console.log("polling result:" + docs[0].Match);
-		var obj = {matchResult:docs[0].Match, tableName:docs[0].Table_Name};
-		var jstr = JSON.stringify(obj);
-		res.send(jstr);
+		if(docs.length == 1){
+			console.log("polling result:" + docs[0].Match);
+			var obj = {matchResult:docs[0].Match, tableName:docs[0].Table_Name};
+			var jstr = JSON.stringify(obj);
+			res.send(jstr);
+		}
+		else{
+			console.log("user not found:" + docs.length);
+			res.send("user not found\n");
+		}
 	});
 });
 
