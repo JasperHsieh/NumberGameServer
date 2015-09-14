@@ -96,14 +96,30 @@ app.post('/registerUserId', function(req, res){
 	rivalID = req.body.RivalID;
 	console.log("handle post request:" + userID + " " + rivalID);
 
+	var obj = {};
+
 	if(isIdLegal(userID) && isIdLegal(rivalID)){
 
-		addUser(userID, rivalID, startCheckMatch);
+		//addUser(userID, rivalID, startCheckMatch);
+		var doc = {user_ID:userID, rival_ID:rivalID, Match:0};
+		Users_coll.insert(doc, function(err, result){
+
+			assert.equal(null, err);
+			console.log("insert successfuly:" + result[0]);
+
+			obj = {PostType:"registerUserId", Result:"Success"}
+			var jstr = JSON.stringify(obj);
+			res.send(jstr);
+
+			startCheckMatch(userID, rivalID);
+		});
+	}
+	else{
+		obj = {PostType:"registerUserId", Result:"Fail"};
+		var jstr = JSON.stringify(obj);
+		res.send(jstr);
 	}
 
-	//startCheckMatch(userID, rivalID);
-
-	res.send('You have posted the form\n');
 });
 
 app.post('/checkFetched', function(req, res){
@@ -160,7 +176,7 @@ app.post('/checkTable', function(req, res){
 });
 
 
-app.post('/submitNumbers', function(req. res){
+app.post('/submitNumbers', function(req, res){
 
 });
 
