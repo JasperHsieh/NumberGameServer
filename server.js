@@ -9,8 +9,8 @@ app.use(bodyParser.urlencoded({
 	extended:true
 }));
 
-var userID = "00000000";
-var rivalID = "00000000";
+//var userID = "00000000";
+//var rivalID = "00000000";
 
 app.use(bodyParser.json());
 
@@ -40,7 +40,7 @@ mongodb.MongoClient.connect(MONGODB_URL, function(err, database){
 });
 
 
-function dump(cursor){
+function dump(mID, rID, cursor){
 
 	console.log("dump");
 	console.log(cursor);
@@ -77,7 +77,7 @@ function queryMongodb(document, callback){
 		console.log(docs);
 		//console.log(docs[0].rival_ID);
 
-		callback(docs);
+		callback(document.user_ID, document.rival_ID, docs);
 	});
 }
 
@@ -92,8 +92,8 @@ function deleteMongodb(document){
 // check if the opponent is already in database
 app.post('/registerUserId', function(req, res){
 
-	userID = req.body.UserID;
-	rivalID = req.body.RivalID;
+	var userID = req.body.UserID;
+	var rivalID = req.body.RivalID;
 	console.log("handle post request:" + userID + " " + rivalID);
 
 	var obj = {};
@@ -216,7 +216,7 @@ function startCheckMatch(mID, rID){
 	queryMongodb(doc, checkMatch);
 }
 
-function checkMatch(cursor){
+function checkMatch(mID, rID, cursor){
 
 	console.log("checkMatch");
 	console.log(cursor);
@@ -227,7 +227,7 @@ function checkMatch(cursor){
 	else if(cursor.length == 1){
 		// ID fetched, game start
 		console.log("Opponent found");
-		handleFetched();
+		handleFetched(mID, rID);
 	}
 	else{
 		// found more than one opponent, should not happen
@@ -236,19 +236,19 @@ function checkMatch(cursor){
 }
 
 // create collection for users and set match flag
-function handleFetched(){
+function handleFetched(mID, rID){
 
 	console.log("handleFetched");
-	var collection_name = "table_" + userID + "_" + rivalID;
+	var collection_name = "table_" + mID + "_" + rID;
 	var new_coll = db.collection(collection_name);
 	new_coll.insert({User_name:'test', guess:'1234', guess_result:'0A0B'}, function(err, result){
 		assert.equal(null, err);
 	});
-	var sel = {user_ID:userID}
+	var sel = {user_ID:mID}
 	var doc = {$set:{Match:1, Table_Name:collection_name}};
 
 	updateMongodb(Users_coll, sel, doc);
 
-	sel = {user_ID:rivalID};
+	sel = {user_ID:rID};
 	updateMongodb(Users_coll, sel, doc);
 }
