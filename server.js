@@ -135,7 +135,15 @@ app.post('/checkFetched', function(req, res){
 		if(docs.length == 1){
 			console.log("polling result:" + docs[0].Match);
 			//var obj = {matchResult:docs[0].Match, tableName:docs[0].Table_Name};
-			obj = {PostType:"checkFetehed", Result:"Success", MatchResult:docs[0].Match, TableName:docs[0].Table_Name};
+			var matchResult = docs[0].Match;
+			if(matchResult == 1){
+				obj = {PostType:"checkFetehed", Result:"Success", MatchResult:docs[0].Match, TableName:docs[0].Table_Name};
+			}
+			else{
+
+				console.log("not match yet");
+				obj  = {PostType:"checkFetched", Result:"Fail"};
+			}
 		}
 		else{
 			console.log("user not found:" + docs.length);
