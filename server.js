@@ -90,7 +90,7 @@ function deleteMongodb(document){
 // handle post request
 // if the ID is legal, then insert the user to database
 // check if the opponent is already in database
-app.post('/', function(req, res){
+app.post('/registerUserId', function(req, res){
 
 	userID = req.body.UserID;
 	rivalID = req.body.RivalID;
@@ -111,26 +111,56 @@ app.post('/checkFetched', function(req, res){
 	var pollingID = req.body.PollingID;
 	console.log("handle polling request from:" + pollingID);
 	var doc = {user_ID:pollingID};
+
 	Users_coll.find(doc).toArray(function(err, docs){
+
 		assert.equal(null, err);
+		var obj = {};
 		if(docs.length == 1){
 			console.log("polling result:" + docs[0].Match);
-			var obj = {matchResult:docs[0].Match, tableName:docs[0].Table_Name};
-			var jstr = JSON.stringify(obj);
-			res.send(jstr);
+			//var obj = {matchResult:docs[0].Match, tableName:docs[0].Table_Name};
+			obj = {PostType:"checkFetehed", Result:"Success", MatchResult:docs[0].Match, TableName:docs[0].Table_Name};
 		}
 		else{
 			console.log("user not found:" + docs.length);
-			res.send("user not found\n");
+			obj  = {PostType:"checkFetched", Result:"Fail"};
 		}
+		var jstr = JSON.stringify(obj);
+		res.send(jstr);
 	});
 });
 
 app.post('/checkTable', function(req, res){
 
-	var currentID = req.body.CurrentID;
-	var currentTable = req.body.CurrentTable;
+	var currentID = req.body.UserID;
+	var currentColl = req.body.table;
+
 	console.log("handle table checking from:" + currentID);
+
+	currentColl.find().toArray(function(err, docs){
+
+		assert.equal(null, err);
+		var rowSize = docs.length;
+		var lastRowUser = docs[rowSize].User_name;
+		var obj = {};
+
+		if(currentID == lastRowUser){
+			// rival hasn't submit numbers
+			obj = {PostType:"checkTable", Result:"Fail"};
+		}
+		else{
+			// rival has submited the numbers
+			obj = {PostType:"checkTable", Result:"Success", RivalNumber:docs[rowSize].guess, 
+						RivalResult:docs[rowSize].guess_result};
+		}
+		var jstr = JSON.stringify(obj);
+		res.send(jstr);
+	});
+
+});
+
+
+app.post('/submitNumbers', function(req. res){
 
 });
 
