@@ -49,7 +49,7 @@ function dump(cursor){
 // insert mongo db
 function insertMongodb(document, callback){
 
-	console.log("insertMongodb:");
+	console.log("insertMongodb");
 	Users_coll.insert(document, function(err, result){
 		assert.equal(null, err);
 		console.log("insert successfuly:" + result[0]);
@@ -60,7 +60,7 @@ function insertMongodb(document, callback){
 // update mongo db
 function updateMongodb(collection, selector, document){
 
-	console.log("updateMongodb:");
+	console.log("updateMongodb");
 	collection.update(selector, document, function(err, numberUpdated){
 		assert.equal(null, err);
 		console.log("update:" + selector.user_ID + " successfully");
@@ -70,7 +70,7 @@ function updateMongodb(collection, selector, document){
 // query mongo db
 function queryMongodb(document, callback){
 
-	console.log("queryMongodb:");
+	console.log("queryMongodb");
 	Users_coll.find(document).toArray(function(err, docs){
 
 		assert.equal(err, null);
@@ -84,7 +84,7 @@ function queryMongodb(document, callback){
 // delete mongo db
 function deleteMongodb(document){
 
-	console.log("deleteMongodb:" + document);
+	console.log("deleteMongodb");
 }
 
 // handle post request
@@ -105,7 +105,7 @@ app.post('/registerUserId', function(req, res){
 		Users_coll.insert(doc, function(err, result){
 
 			assert.equal(null, err);
-			console.log("insert successfuly:" + result[0]);
+			console.log("iinsert successfuly:" + result.insertedCount);
 
 			obj = {PostType:"registerUserId", Result:"Success"}
 			var jstr = JSON.stringify(obj);
