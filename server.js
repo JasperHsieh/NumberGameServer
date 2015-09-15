@@ -169,11 +169,11 @@ app.post('/checkTable', function(req, res){
 
 		assert.equal(null, err);
 		var rowSize = docs.length;
-		console.log("rowSize:" + rowSize);
-		var lastRowUser = docs[rowSize-1].User_name;
+		//console.log("rowSize:" + rowSize);
+		//var lastRowUser = docs[rowSize-1].User_name;
 		var obj = {};
 
-		if(lastRowUser == rivalID){
+		if(isReadyToSubmit(userID, rivalID, docs)){
 			// rival has submited the numbers
 			obj = {PostType:"checkTable", Result:"Success", RivalNumber:docs[rowSize-1].guess, 
 						RivalResult:docs[rowSize-1].guess_result};
@@ -202,6 +202,32 @@ app.post('/submitNumbers', function(req, res){
 
 
 });
+
+function isReadyToSubmit(mID, rID, cursor){
+
+	var rowSize = cursor.length;
+
+	if(rowSize < 1){
+		// should not happen
+		return false;
+	}
+	else if(rowSize == 1){
+		return true;
+	}
+	else{
+		var lastUser = cursor[rowSize-1].User_name;
+		if((rowSize == 2) && (lastUser == rID)) {
+			return true;
+		}
+		else{
+			var lastSecondUser = docs[cursor-2].User_name;
+			if((lastUser == rID) && (lastSecondUser == mID)){
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
 function isIdLegal(ID){
 
