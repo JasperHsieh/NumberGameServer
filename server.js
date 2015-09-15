@@ -160,7 +160,7 @@ app.post('/checkTable', function(req, res){
 	console.log("/checkTable");
 	var userID = req.body.UserID;
 	var rivalID = req.body.RivalID;
-	var userCollName = req.body.table;
+	var userCollName = req.body.Table;
 	var user_coll = db.collection(userCollName);
 
 	console.log("userID:" + userID + " rivalID:" + rivalID + " table:" + userCollName);
@@ -195,11 +195,22 @@ app.post('/submitNumbers', function(req, res){
 	var userID = req.body.UserID;
 	var guessNumber = req.body.guessNumber;
 	var guessResult = req.body.guessResult;
-	var table = req.body.tableName;
+	var userCollName = req.body.Table;
+	var user_coll = db.collection(userCollName);
 
-	console.log("user:" + userID + " table:" + table);
-	console.log("submit:" + guessNumber + ", " + guessResult);
+	console.log("user:" + userID + " table:" + userCollName);
+	console.log("submit:" + guessNumber + "," + guessResult);
 
+	var doc = {User_name:userID, guess:guessNumber, guess_result:guessResult};
+	user_coll.insert(doc, function(err, result){
+
+		assert.equal(null, err);
+		console.log("submit successfully");
+
+		var obj = {postType:"submitNumbers", Result:"Success"};
+		var jstr = JSON.stringify(obj);
+		res.send(jstr);
+	});
 
 });
 
