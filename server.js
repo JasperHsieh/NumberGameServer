@@ -126,6 +126,7 @@ app.post('/checkFetched', function(req, res){
 
 	var pollingID = req.body.PollingID;
 	console.log("handle polling request from:" + pollingID);
+
 	var doc = {user_ID:pollingID};
 
 	Users_coll.find(doc).toArray(function(err, docs){
@@ -156,27 +157,32 @@ app.post('/checkFetched', function(req, res){
 
 app.post('/checkTable', function(req, res){
 
-	var currentID = req.body.UserID;
-	var currentColl = req.body.table;
+	console.log("/checkTable");
+	var userID = req.body.UserID;
+	var rivalID = req.body.RivalID;
+	var userCollName = req.body.table;
+	var user_coll = db.collection(userCollName);
 
-	console.log("handle table checking from:" + currentID);
+	console.log("userID:" + userID + " rivalID:" + rivalID + " table:" + userCollName);
 
-	currentColl.find().toArray(function(err, docs){
+	user_coll.find().toArray(function(err, docs){
 
 		assert.equal(null, err);
 		var rowSize = docs.length;
-		var lastRowUser = docs[rowSize].User_name;
+		console.log("rowSize:" + rowSize);
+		var lastRowUser = docs[rowSize-1].User_name;
 		var obj = {};
 
-		if(currentID == lastRowUser){
+		if(lastRowUser == rivalID){
+			// rival has submited the numbers
+			obj = {PostType:"checkTable", Result:"Success", RivalNumber:docs[rowSize-1].guess, 
+						RivalResult:docs[rowSize-1].guess_result};
+		}
+		else{
 			// rival hasn't submit numbers
 			obj = {PostType:"checkTable", Result:"Fail"};
 		}
-		else{
-			// rival has submited the numbers
-			obj = {PostType:"checkTable", Result:"Success", RivalNumber:docs[rowSize].guess, 
-						RivalResult:docs[rowSize].guess_result};
-		}
+
 		var jstr = JSON.stringify(obj);
 		res.send(jstr);
 	});
@@ -185,6 +191,15 @@ app.post('/checkTable', function(req, res){
 
 
 app.post('/submitNumbers', function(req, res){
+
+	var userID = req.body.UserID;
+	var guessNumber = req.body.guessNumber;
+	var guessResult = req.body.guessResult;
+	var table = req.body.tableName;
+
+	console.log("user:" + userID + " table:" + table);
+	console.log("submit:" + guessNumber + ", " + guessResult);
+
 
 });
 
