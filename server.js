@@ -92,6 +92,7 @@ function deleteMongodb(document){
 // check if the opponent is already in database
 app.post('/registerUserId', function(req, res){
 
+	// Need to parse: UserID and RivalID
 	var userID = req.body.UserID;
 	var rivalID = req.body.RivalID;
 	console.log("handle post request:" + userID + " " + rivalID);
@@ -100,7 +101,6 @@ app.post('/registerUserId', function(req, res){
 
 	if(isIdLegal(userID) && isIdLegal(rivalID)){
 
-		//addUser(userID, rivalID, startCheckMatch);
 		var doc = {user_ID:userID, rival_ID:rivalID, Match:0};
 		Users_coll.insert(doc, function(err, result){
 
@@ -124,6 +124,7 @@ app.post('/registerUserId', function(req, res){
 
 app.post('/checkFetched', function(req, res){
 
+	// Need to parse: PollingID
 	var pollingID = req.body.PollingID;
 	console.log("handle polling request from:" + pollingID);
 
@@ -157,6 +158,7 @@ app.post('/checkFetched', function(req, res){
 
 app.post('/checkTable', function(req, res){
 
+	// Need to parse: UserID, RivalID and Table
 	console.log("/checkTable");
 	var userID = req.body.UserID;
 	var rivalID = req.body.RivalID;
@@ -192,6 +194,7 @@ app.post('/checkTable', function(req, res){
 
 app.post('/submitNumbers', function(req, res){
 
+	// Need to parse: UserID, guessNumber, guessResult and Table
 	var userID = req.body.UserID;
 	var guessNumber = req.body.guessNumber;
 	var guessResult = req.body.guessResult;
