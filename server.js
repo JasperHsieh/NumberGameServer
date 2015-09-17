@@ -122,7 +122,7 @@ app.post('/registerUserId', function(req, res){
 
 });
 
-app.post('/checkFetched', function(req, res){
+app.post('/checkPairState', function(req, res){
 
 	// Need to parse: PollingID
 	var pollingID = req.body.PollingID;
@@ -139,7 +139,10 @@ app.post('/checkFetched', function(req, res){
 			//var obj = {matchResult:docs[0].Match, tableName:docs[0].Table_Name};
 			var matchResult = docs[0].Match;
 			if(matchResult == 1){
-				obj = {PostType:"checkPairState", Result:"Success", MatchResult:docs[0].Match, TableName:docs[0].Table_Name};
+				obj = {PostType:"checkPairState", Result:"Success", 
+						TargetNumber:"5678", StartFirst:"true",
+						TableName:docs[0].Table_Name
+						};
 			}
 			else{
 
@@ -177,7 +180,7 @@ app.post('/checkTable', function(req, res){
 
 		if(isReadyToSubmit(userID, rivalID, docs)){
 			// rival has submited the numbers
-			obj = {PostType:"checkTable", Result:"Success", RivalNumber:docs[rowSize-1].guess, 
+			obj = {PostType:"checkTable", Result:"Success", RivalNumbers:docs[rowSize-1].guess, 
 						RivalResult:docs[rowSize-1].guess_result};
 		}
 		else{
@@ -194,6 +197,7 @@ app.post('/checkTable', function(req, res){
 
 app.post('/submitNumbers', function(req, res){
 
+	console.log("/submitNumbers");
 	// Need to parse: UserID, guessNumber, guessResult and Table
 	var userID = req.body.UserID;
 	var guessNumber = req.body.guessNumber;
@@ -210,7 +214,7 @@ app.post('/submitNumbers', function(req, res){
 		assert.equal(null, err);
 		console.log("submit successfully");
 
-		var obj = {postType:"submitNumbers", Result:"Success"};
+		var obj = {PostType:"submitNumbers", Result:"Success"};
 		var jstr = JSON.stringify(obj);
 		res.send(jstr);
 	});
@@ -234,7 +238,7 @@ function isReadyToSubmit(mID, rID, cursor){
 			return true;
 		}
 		else{
-			var lastSecondUser = docs[cursor-2].User_name;
+			var lastSecondUser = cursor[rowSize-2].User_name;
 			if((lastUser == rID) && (lastSecondUser == mID)){
 				return true;
 			}

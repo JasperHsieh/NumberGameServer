@@ -11,7 +11,7 @@ sudo mongod --dbpath=/data --port 27017
 * insert
 >db.COLLECTION_NAME.insert(document)
 db.Users.insert({user_ID:"1", rival_ID:"99999999", Match:0})
-
+db.Users.insert({user_ID:"1", rival_ID:"9999", Match:0})
 
 * query
 >db.COLLECTION_NAME.find()
