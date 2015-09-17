@@ -139,8 +139,9 @@ app.post('/checkPairState', function(req, res){
 			//var obj = {matchResult:docs[0].Match, tableName:docs[0].Table_Name};
 			var matchResult = docs[0].Match;
 			if(matchResult == 1){
+				var targetNumber = targetNumberGenerater();
 				obj = {PostType:"checkPairState", Result:"Success", 
-						TargetNumber:"5678", StartFirst:"true",
+						TargetNumber:targetNumber, StartFirst:"true",
 						TableName:docs[0].Table_Name
 						};
 			}
@@ -310,4 +311,20 @@ function handleFetched(mID, rID){
 
 	sel = {user_ID:rID};
 	updateMongodb(Users_coll, sel, doc);
+}
+
+function targetNumberGenerater(){
+	var rn;
+	var tn = "";
+	var set = new Set();
+
+	while(set.size < 4){
+		rn  = Math.floor(Math.random()*10);
+		set.add(rn);
+	}
+	for(item of set){
+		tn = tn + item;
+	}
+	console.log("Generate random number:" + tn);
+	return tn;
 }
