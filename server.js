@@ -167,6 +167,7 @@ app.post('/checkTable', function(req, res){
 	var userID = req.body.UserID;
 	var rivalID = req.body.RivalID;
 	var userCollName = req.body.Table;
+	//var isFirst = req.body.IsFirst;
 	var user_coll = db.collection(userCollName);
 
 	console.log("userID:" + userID + " rivalID:" + rivalID + " table:" + userCollName);
@@ -179,7 +180,7 @@ app.post('/checkTable', function(req, res){
 		//var lastRowUser = docs[rowSize-1].User_name;
 		var obj = {};
 
-		if(isReadyToSubmit(userID, rivalID, docs)){
+		if(isReadyToSubmit(userID, rivalID, userCollName, docs)){
 			// rival has submited the numbers
 			obj = {PostType:"checkTable", Result:"Success", RivalNumbers:docs[rowSize-1].guess, 
 						RivalResult:docs[rowSize-1].guess_result};
@@ -222,7 +223,7 @@ app.post('/submitNumbers', function(req, res){
 
 });
 
-function isReadyToSubmit(mID, rID, cursor){
+function isReadyToSubmit(mID, rID, collName, cursor){
 
 	var rowSize = cursor.length;
 
@@ -231,7 +232,13 @@ function isReadyToSubmit(mID, rID, cursor){
 		return false;
 	}
 	else if(rowSize == 1){
-		return true;
+
+		if(isFirst(mID, collName)){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	else{
 		var lastUser = cursor[rowSize-1].User_name;
@@ -246,6 +253,26 @@ function isReadyToSubmit(mID, rID, cursor){
 		}
 	}
 	return false;
+}
+
+function isFirst(mID, tableName){
+
+	if(tableName != ""){
+
+		var arr = tableName.split("_");
+		if(mID == arr[1]){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	else{
+
+		// should not happen
+		console.log("table name is null");
+		return false;
+	}
 }
 
 function isIdLegal(ID){
@@ -301,7 +328,7 @@ function handleFetched(mID, rID){
 	console.log("handleFetched");
 	var collection_name = "table_" + mID + "_" + rID;
 	var new_coll = db.collection(collection_name);
-	new_coll.insert({User_name:'test', guess:'1234', guess_result:'0A0B'}, function(err, result){
+	new_coll.insert({User_name:'test', guess:'0000', guess_result:'0A0B'}, function(err, result){
 		assert.equal(null, err);
 	});
 	var sel = {user_ID:mID}
