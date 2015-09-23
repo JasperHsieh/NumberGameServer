@@ -180,7 +180,7 @@ app.post('/checkTable', function(req, res){
 		//var lastRowUser = docs[rowSize-1].User_name;
 		var obj = {};
 
-		if(isReadyToSubmit(userID, rivalID, userCollName, docs)){
+		if(isReadyForNextPlayer(userID, rivalID, userCollName, docs)){
 			// rival has submited the numbers
 			obj = {PostType:"checkTable", Result:"Success", RivalNumbers:docs[rowSize-1].guess, 
 						RivalResult:docs[rowSize-1].guess_result};
@@ -223,7 +223,7 @@ app.post('/submitNumbers', function(req, res){
 
 });
 
-function isReadyToSubmit(mID, rID, collName, cursor){
+function isReadyForNextPlayer(mID, rID, collName, cursor){
 
 	var rowSize = cursor.length;
 
@@ -231,48 +231,17 @@ function isReadyToSubmit(mID, rID, collName, cursor){
 		// should not happen
 		return false;
 	}
-	else if(rowSize == 1){
+	else{
 
-		if(isFirst(mID, collName)){
+		var lastUser = cursor[rowSize-1].User_name;
+		if(lastUser == rID){
 			return true;
 		}
 		else{
 			return false;
-		}
-	}
-	else{
-		var lastUser = cursor[rowSize-1].User_name;
-		if((rowSize == 2) && (lastUser == rID)) {
-			return true;
-		}
-		else{
-			var lastSecondUser = cursor[rowSize-2].User_name;
-			if((lastUser == rID) && (lastSecondUser == mID)){
-				return true;
-			}
 		}
 	}
 	return false;
-}
-
-function isFirst(mID, tableName){
-
-	if(tableName != ""){
-
-		var arr = tableName.split("_");
-		if(mID == arr[1]){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-	else{
-
-		// should not happen
-		console.log("table name is null");
-		return false;
-	}
 }
 
 function isIdLegal(ID){
