@@ -139,9 +139,9 @@ app.post('/checkPairState', function(req, res){
 			//var obj = {matchResult:docs[0].Match, tableName:docs[0].Table_Name};
 			var matchResult = docs[0].Match;
 			if(matchResult == 1){
-				var targetNumber = targetNumberGenerater();
+
 				obj = {PostType:"checkPairState", Result:"Success", 
-						TargetNumber:targetNumber, StartFirst:"true",
+						TargetNumber:docs[0].Target_Number, StartFirst:"true",
 						TableName:docs[0].Table_Name
 						};
 			}
@@ -301,7 +301,8 @@ function handleFetched(mID, rID){
 		assert.equal(null, err);
 	});
 	var sel = {user_ID:mID}
-	var doc = {$set:{Match:1, Table_Name:collection_name}};
+	var random = targetNumberGenerater();
+	var doc = {$set:{Match:1, Table_Name:collection_name, Target_Number:random}};
 
 	updateMongodb(Users_coll, sel, doc);
 
