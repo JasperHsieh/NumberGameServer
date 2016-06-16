@@ -87,7 +87,7 @@ function deleteMongodb(document){
 	console.log("deleteMongodb");
 }
 
-app.post('/', function(req, res){
+app.get('/', function(req, res){
 
     res.send("You enter Number Game server");
 });
