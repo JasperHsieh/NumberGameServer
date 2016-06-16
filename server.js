@@ -87,6 +87,11 @@ function deleteMongodb(document){
 	console.log("deleteMongodb");
 }
 
+app.post('/', function(req, res){
+
+    res.send("You enter Number Game server");
+});
+
 // handle post request
 // if the ID is legal, then insert the user to database
 // check if the opponent is already in database
