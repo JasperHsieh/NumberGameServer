@@ -4,7 +4,7 @@ var mongodb = require('mongodb');
 var assert = require('assert');
 
 var app = express();
-var MONGODB_URL = 'mongodb://localhost:27017/test';
+var MONGODB_URL = 'mongodb://Jasper:113538ngdb@ds015334.mlab.com:15334/heroku_3dftbx4l';
 app.use(bodyParser.urlencoded({
 	extended:true
 }));
@@ -27,7 +27,7 @@ mongodb.MongoClient.connect(MONGODB_URL, function(err, database){
 	else{
 		console.log('mongodb connect successfully');
 		db = database;
-		Users_coll = db.collection('Users');
+		Users_coll = db.collection('NumberGameDB');
 		//assert(1===3, 'assert fail');
 		//console.log(Users_coll);
 		//console.log(database);
