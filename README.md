@@ -2,6 +2,10 @@
 
 This is a server for [Number Game APP](https://github.com/JasperHsieh/NumberGame) written by javascript.<br>
 It use nodeJS express and mongoDB to handle the request from Number Game App. <br>
+### Database
+I deployed this server on [Heroku](https://dashboard.heroku.com/apps). Its a web service for static website and dynamic website.<br>
+Check [here](https://floating-springs-86537.herokuapp.com/) to test the server. <br>
+The mLab database is Heroku add-ons. its free to use it. <br>
 
 ### Handle requests
 This server handle 5 request inlcuding main page "/".
@@ -13,7 +17,11 @@ This server handle 5 request inlcuding main page "/".
 5. app.post('/submitNumbers', function(req, res)
 ```
 Your can see except first one is for GET request, others are for POST request.<br>
-Run the server by "node server.js" and checking the server is running on [localhost:3000](http://localhost:3000/). <br>
+Run the server by "node server.js" <br>
+```
+node server.js
+```
+and see if you got the following message from the server which is running on [localhost:3000](http://localhost:3000/). <br>
 ```
 You enter Number Game server
 ```
@@ -43,5 +51,4 @@ guess. The app side will keep sending 'checkTable' request to get to result from
 ```
 This part obviously is for handling player's guess number. It will insert the result to the table created when game <br>
 was initialized.
-
 
