@@ -1,7 +1,9 @@
 # NumberGameServer
 
 This is a server for [Number Game APP](https://github.com/JasperHsieh/NumberGame) written by javascript.<br>
-It use nodeJS express and mongoDB to handle the request from Number Game App. <br>
+It use nodeJS express and mongoDB to handle the HTTP request from Number Game App. <br>
+This repository is for server side on Heroku. You can also [check client side.](https://github.com/JasperHsieh/NumberGame) <br>
+
 ### Database
 I deployed this server on [Heroku](https://dashboard.heroku.com/apps). Its a web service for static website and dynamic website.<br>
 Check [here](https://floating-springs-86537.herokuapp.com/) to test the server. <br>
